@@ -39,7 +39,6 @@ const accountsRouter = Router();
 accountsRouter.post("/signup", async (req, res) => {
   const { body } = req;
   const { repos } = req.context;
-  console.log({ body });
   const token = await repos.user.create(body);
   if (!token)
     return res.status(httpStatus.FORBIDDEN).send({ error: "Invalid input" });
@@ -49,7 +48,6 @@ accountsRouter.post("/signup", async (req, res) => {
 accountsRouter.post("/login", async (req, res) => {
   const { body } = req;
   const { repos } = req.context;
-  console.log({ body });
   const token = await repos.user.login(body);
   if (!token)
     return res.status(httpStatus.FORBIDDEN).send({ error: "Invalid input" });
