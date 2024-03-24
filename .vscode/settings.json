@@ -3,6 +3,7 @@
     "datasource",
     "datetime",
     "envalid",
+    "openapi",
     "timestamptz",
     "typeorm"
   ],

@@ -5,6 +5,37 @@ import { accountRouter } from "./[id]";
 
 const accountsRouter = Router();
 
+/**
+ * @openapi
+ * /api/v1/accounts/signup:
+ *   post:
+ *     description: Allows a new user to create an account
+ *     parameters:
+ *     - name: username
+ *       isRequired: true
+ *       in: body
+ *       schema:
+ *         type: string
+ *     - name: email
+ *       isRequired: true
+ *       in: body
+ *       schema:
+ *         type: string
+ *     - name: password
+ *       isRequired: true
+ *       in: body
+ *       schema:
+ *         type: string
+ *     responses:
+ *       201:
+ *         description: Returns the access token of the create user
+ *         content:
+ *           application/json:
+ *             schema:
+ *             - name: token
+ *               schema:
+ *                 type: string
+ */
 accountsRouter.post("/signup", async (req, res) => {
   const { body } = req;
   const { repos } = req.context;
