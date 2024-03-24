@@ -2,10 +2,12 @@ module.exports = {
   env: {
     es2021: true,
     node: true,
+    jest: true,
   },
+  plugins: ["@typescript-eslint/eslint-plugin"],
   extends: [
-    "standard-with-typescript",
-    "some-other-config-you-use",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
     "prettier",
   ],
   overrides: [
@@ -23,5 +25,11 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: {},
+  ignorePatterns: [".eslintrc.js"],
+  rules: {
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+  },
 };

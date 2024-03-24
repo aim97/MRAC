@@ -2,3 +2,6 @@
 build
 coverage
 node_modules
+dist
+.vscode
+.husky

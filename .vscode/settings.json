@@ -1,0 +1,10 @@
+{
+  "cSpell.words": [
+    "datasource",
+    "datetime",
+    "envalid",
+    "timestamptz",
+    "typeorm"
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}
