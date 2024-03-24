@@ -1,5 +1,7 @@
 import { Router } from "express";
 import httpStatus from "http-status";
+import { requireAuthenticated } from "../../middlewares/requireAuthenticated";
+import { accountRouter } from "./[id]";
 
 const accountsRouter = Router();
 
@@ -28,6 +30,6 @@ accountsRouter.post("/login", async (req, res) => {
   res.status(httpStatus.CREATED).json({ token });
 });
 
-accountsRouter.use("/:id", accountsRouter);
+accountsRouter.use("/me", requireAuthenticated, accountRouter);
 
 export { accountsRouter };
