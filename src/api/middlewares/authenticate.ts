@@ -7,7 +7,6 @@ export const getAuthenticationMiddleware =
     try {
       const { user: userRepo } = context.repos;
       const token: string = req.headers["x-auth-token"] ?? req.cookies["token"];
-      console.log({ token });
       const user = await userRepo.authenticate(token);
       console.log({ user });
       req.context.user = user;

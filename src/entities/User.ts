@@ -11,8 +11,8 @@ import { Organization } from "./Organization";
 
 @Entity({ name: "user" })
 export class User {
-  @PrimaryGeneratedColumn("increment")
-  public id: number;
+  @PrimaryGeneratedColumn("uuid")
+  public id: string;
 
   @Column({ name: "email", type: "varchar" })
   public email: string;
@@ -34,4 +34,8 @@ export class User {
 
   @OneToMany((type) => Organization, (org) => org.owner)
   ownedOrganizations: Organization[];
+
+  constructor(input: Partial<User>) {
+    Object.assign(this, input);
+  }
 }

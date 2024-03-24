@@ -1,12 +1,19 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { User } from "./User";
 import { PermissionActivityStatus, Role } from "../common/constants";
 import { Organization } from "./Organization";
 
 @Entity({ name: "permission" })
 export class Permission {
-  @PrimaryGeneratedColumn("increment")
-  public id: number;
+  @PrimaryGeneratedColumn("uuid")
+  public id: string;
 
   @Column({ name: "name", type: "varchar", enum: Object.values(Role) })
   public role: Role;
@@ -24,9 +31,13 @@ export class Permission {
   @ManyToOne((type) => Organization, (organization) => organization.id)
   public organization: Organization;
 
-  @Column({ name: "created_at", type: "timestamptz" })
+  @CreateDateColumn()
   public createdAt: Date;
 
-  @Column({ name: "updated_at", type: "timestamptz" })
+  @UpdateDateColumn()
   public updatedAt: Date;
+
+  constructor(input: Partial<Permission>) {
+    Object.assign(this, input);
+  }
 }

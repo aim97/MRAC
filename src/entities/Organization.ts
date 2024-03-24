@@ -1,22 +1,31 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { User } from "./User";
 
 @Entity({ name: "organization" })
 export class Organization {
-  @PrimaryGeneratedColumn("increment")
-  public id: number;
+  @PrimaryGeneratedColumn("uuid")
+  public id: string;
 
   @Column({ name: "name", type: "varchar" })
   public name: String;
 
-  @Column({ name: "created_at", type: "timestamptz" })
+  @CreateDateColumn()
   public createdAt: Date;
 
-  @Column({ name: "updated_at", type: "timestamptz" })
+  @UpdateDateColumn()
   public updatedAt: Date;
 
   @ManyToOne((type) => User, (user) => user.id)
   public owner: User;
 
-  constructor() {}
+  constructor(input: Partial<Organization>) {
+    Object.assign(this, input);
+  }
 }

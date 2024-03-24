@@ -15,5 +15,5 @@ export const AppDataSource = new DataSource({
   migrationsTableName: "migrations",
   migrationsTransactionMode: "each",
   logging: env.NODE_ENV === "development",
-  synchronize: false,
+  synchronize: true,
 });

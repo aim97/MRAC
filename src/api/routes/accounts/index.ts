@@ -5,11 +5,6 @@ import { accountRouter } from "./[id]";
 
 const accountsRouter = Router();
 
-accountsRouter.use((req, res, next) => {
-  console.log(req.method + " " + req.path);
-  next();
-});
-
 accountsRouter.post("/signup", async (req, res) => {
   const { body } = req;
   const { repos } = req.context;

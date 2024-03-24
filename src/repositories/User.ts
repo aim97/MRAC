@@ -73,7 +73,13 @@ export class UserRepo {
   }
 
   async getUserByUserName(username: string) {
-    const user = await this.repo.findOne({ where: { username } });
+    const user = await this.repo.findOne({
+      where: { username },
+      relations: {
+        ownedOrganizations: true,
+        permissions: true,
+      },
+    });
     return user;
   }
 

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 export const requireAuthenticated = (
   req: Request,
-  res: Response,
+  _: Response,
   next: NextFunction,
 ) => {
   console.log({ usr: req.context.user });

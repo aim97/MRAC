@@ -1,5 +1,11 @@
 import { DataSource, Repository } from "typeorm";
 import { Organization } from "../entities/Organization";
+import { User } from "../entities/User";
+
+type CreateOrganizationInput = {
+  name: string;
+  ownerId: string;
+};
 
 export class OrganizationRepo {
   private static instance: OrganizationRepo;
@@ -15,5 +21,14 @@ export class OrganizationRepo {
 
   private constructor(private dataSource: DataSource) {
     this.repo = dataSource.getRepository(Organization);
+  }
+
+  async create(input: CreateOrganizationInput) {
+    const org = new Organization({
+      name: input.name,
+      owner: new User({ id: input.ownerId }),
+    });
+    await this.repo.save(org);
+    return org;
   }
 }
