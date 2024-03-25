@@ -1,9 +1,7 @@
 import { Router } from "express";
-import R from "ramda";
 import httpStatus from "http-status";
 import { organizationRouter as organizationInstanceRouter } from "./[id]";
-import { Permission } from "../../../entities/permission";
-import { PermissionActivityStatus } from "../../../common/constants";
+import { getOrganizationAccessPermission } from "../../middlewares/getOrganizationAccessPermission";
 
 const organizationRouter = Router();
 
@@ -22,42 +20,37 @@ organizationRouter.post("/", async (req, res) => {
 });
 
 organizationRouter.get("/owned", async (req, res) => {
-  res.status(httpStatus.OK).json(req.context.user!.ownedOrganizations);
+  const { user, repos } = req.context;
+  const ownedOrganizations = await repos.organization.getUserOwnedOrganizations(
+    user!.id,
+  );
+  res.status(httpStatus.OK).json(ownedOrganizations);
 });
 
 organizationRouter.get("/accessible", async (req, res) => {
-  res
-    .status(httpStatus.OK)
-    .json(
-      req.context.user!.permissions.map(({ organization }) => organization),
-    );
+  const { user, repos } = req.context;
+  const accessibleOrgs = await repos.permission.getUserAccessibleOrganizations(
+    user?.id!,
+  );
+  res.status(httpStatus.OK).json(accessibleOrgs);
 });
 
 organizationRouter.get("/invites", async (req, res) => {
-  const user = req.context.user!;
-  const invited = user.permissions
-    .filter(({ status }) => status === PermissionActivityStatus.Pending)
-    .map(R.prop("organization"));
-  res.status(httpStatus.OK).json(invited);
-});
-
-organizationRouter.get("/list", async (req, res) => {
-  const user = req.context.user!;
-  const [invited, accessible] = R.partition(
-    (permission: Permission) =>
-      permission.status === PermissionActivityStatus.Pending,
-    user.permissions,
+  const { user, repos } = req.context;
+  const invitations = await repos.permission.getUserOrganizationInvitations(
+    user!.id,
   );
-  const response = {
-    accessibleOrganizations: accessible
-      .filter(({ status }) => status === PermissionActivityStatus.Active)
-      .map(R.prop("organization")),
-    ownedOrganizations: user.ownedOrganizations,
-    invited: R.map(R.prop("organization"), invited),
-  };
-  res.status(httpStatus.OK).json(response);
+  res.status(httpStatus.OK).json(invitations);
 });
 
-organizationRouter.use("/:id", organizationInstanceRouter);
+organizationRouter.post("/invites/:invitationId/accept", async (req, res) => {
+  // todo
+});
+
+organizationRouter.use(
+  "/:organizationId",
+  getOrganizationAccessPermission,
+  organizationInstanceRouter,
+);
 
 export { organizationRouter };

@@ -10,9 +10,6 @@ permissionsRouter.get("/:id");
 
 permissionsRouter.post("/");
 
-// only owner, Admin or HR of invite
-permissionsRouter.post("/accept");
-
 // only owner, admin or HR
 permissionsRouter.delete("/");
 

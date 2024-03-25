@@ -28,7 +28,7 @@ export class UserRepo {
   private repo: Repository<User>;
 
   static getInstance(dataSource: DataSource) {
-    if (UserRepo.instance == null) {
+    if (!UserRepo.instance) {
       UserRepo.instance = new UserRepo(dataSource);
     }
     return this.instance;
@@ -75,16 +75,11 @@ export class UserRepo {
   async getUserByUserName(username: string) {
     const user = await this.repo.findOne({
       where: { username },
-      relations: {
-        ownedOrganizations: true,
-        permissions: true,
-      },
     });
     return user;
   }
 
   async create(userData: CreateUserInput) {
-    console.log({ userData });
     const password = await this.hashPassword(userData.password);
     const user = this.repo.create({ ...userData, password });
     this.repo.save(user);

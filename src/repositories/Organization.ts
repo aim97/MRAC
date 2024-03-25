@@ -31,4 +31,12 @@ export class OrganizationRepo {
     await this.repo.save(org);
     return org;
   }
+
+  async get(id: string) {
+    return this.repo.findOne({ where: { id }, relations: { owner: true } });
+  }
+
+  async getUserOwnedOrganizations(userId: string): Promise<Organization[]> {
+    return this.repo.find({ where: { owner: new User({ id: userId }) } });
+  }
 }
