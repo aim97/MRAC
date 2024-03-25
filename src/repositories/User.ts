@@ -79,6 +79,13 @@ export class UserRepo {
     return user;
   }
 
+  async getUserByEmail(email: string) {
+    const user = await this.repo.findOne({
+      where: { email },
+    });
+    return user;
+  }
+
   async create(userData: CreateUserInput) {
     const password = await this.hashPassword(userData.password);
     const user = this.repo.create({ ...userData, password });

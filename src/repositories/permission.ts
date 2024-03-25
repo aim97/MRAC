@@ -34,6 +34,7 @@ export class PermissionRepo {
       where: {
         employee: new User({ id: userId }),
         organization: new Organization({ id: organizationId }),
+        status: PermissionActivityStatus.Active,
       },
       relations: {
         organization: true,
@@ -92,5 +93,20 @@ export class PermissionRepo {
       },
       relations: { organization: true },
     });
+  }
+
+  public async getOrganizationPermissions(organizationId: string) {
+    return this.repo.find({
+      where: {
+        organization: new Organization({ id: organizationId }),
+      },
+      relations: {
+        employee: true,
+      },
+    });
+  }
+
+  public async findById(id: string) {
+    return this.repo.findOne({ where: { id } });
   }
 }
