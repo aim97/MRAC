@@ -3,6 +3,7 @@ import { Permission } from "../entities/permission";
 import { PermissionActivityStatus, Role } from "../common/constants";
 import { User } from "../entities/User";
 import { Organization } from "../entities/Organization";
+import { ApiError, ErrorCode } from "../common/ApiError";
 
 type CreateInvitationInput = {
   userId: string;
@@ -70,7 +71,11 @@ export class PermissionRepo {
         status: PermissionActivityStatus.Active,
       },
     );
-    if (result.affected === 0) throw new Error("Not Found");
+    if (result.affected === 0)
+      throw new ApiError(
+        ErrorCode.NotFound,
+        "Invitation is no longer available",
+      );
     return this.findById(invitationId);
   }
 

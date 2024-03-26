@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { AnyZodObject } from "zod";
+import httpStatus from "http-status";
+import { AnyZodObject, ZodError } from "zod";
+import { ApiError, ErrorCode } from "./ApiError";
 
 export const schemaValidator =
   (schema: AnyZodObject) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.params);
       await schema.parseAsync({
         body: req.body,
         query: req.query,
@@ -13,6 +14,14 @@ export const schemaValidator =
       });
       return next();
     } catch (error) {
-      return res.status(400).json(error);
+      if (error instanceof ZodError) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          message: `Validation Error: ${error.message}`,
+          details: error.issues.map((issue) => ({
+            field: issue.path,
+            message: issue.message,
+          })),
+        });
+      } else throw new ApiError(ErrorCode.ServerError, String(error));
     }
   };

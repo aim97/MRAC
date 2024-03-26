@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 
 import { User } from "../entities/User";
 import { env } from "../config";
+import { ApiError, ErrorCode } from "../common/ApiError";
 
 type CreateUserInput = {
   username: string;
@@ -95,7 +96,7 @@ export class UserRepo {
 
   async authenticate(token: string) {
     const user = await this.decodeToken(token);
-    if (!user) throw new Error("Not found");
+    if (!user) throw new ApiError(ErrorCode.UnAuthenticated, "Token expired");
     return user;
   }
 
@@ -103,7 +104,7 @@ export class UserRepo {
     const { username, password } = credentials;
     const user = await this.getUserByUserName(username);
     if (!user || !(await this.verifyPassword(password, user.password))) {
-      throw new Error("Invalid credentials");
+      throw new ApiError(ErrorCode.BadUserInput, "Invalid credentials");
     }
     return this.generateToken(user);
   }

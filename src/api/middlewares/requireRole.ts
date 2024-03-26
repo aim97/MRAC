@@ -1,5 +1,6 @@
 import { Request, NextFunction, Response } from "express";
 import { Role } from "../../common/constants";
+import { ApiError, ErrorCode } from "../../common/ApiError";
 
 export const requireOrganizationRole =
   (roles: Role[]) =>
@@ -9,7 +10,8 @@ export const requireOrganizationRole =
     if (permission === "Owner" || roles.includes(permission?.role)) {
       next();
     } else {
-      throw new Error(
+      throw new ApiError(
+        ErrorCode.UnAuthorized,
         `role ${permission?.role} has no access to this requested resource`,
       );
     }
