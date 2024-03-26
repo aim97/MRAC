@@ -14,7 +14,7 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Column({ name: "email", type: "varchar" })
+  @Column({ name: "email", type: "varchar", unique: true })
   public email: string;
 
   @Column({ name: "username", type: "varchar" })

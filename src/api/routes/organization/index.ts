@@ -44,7 +44,13 @@ organizationRouter.get("/invites", async (req, res) => {
 });
 
 organizationRouter.post("/invites/:invitationId/accept", async (req, res) => {
-  // todo
+  const { user, repos } = req.context;
+  const invitationId = req.params.invitationId;
+  const permission = await repos.permission.acceptInvitation(
+    user!.id,
+    invitationId,
+  );
+  res.status(httpStatus.OK).json(permission);
 });
 
 organizationRouter.use(

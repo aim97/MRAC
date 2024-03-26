@@ -59,12 +59,19 @@ export class PermissionRepo {
     return invite;
   }
 
-  public async acceptInvitation(invitationId: string) {
-    const acceptInvitationUpdate = new Permission({
-      id: invitationId,
-      status: PermissionActivityStatus.Active,
-    });
-    return this.repo.save(acceptInvitationUpdate);
+  public async acceptInvitation(invitedUserId: string, invitationId: string) {
+    const result = await this.repo.update(
+      {
+        employee: new User({ id: invitedUserId }),
+        id: invitationId,
+        status: PermissionActivityStatus.Pending,
+      },
+      {
+        status: PermissionActivityStatus.Active,
+      },
+    );
+    if (result.affected === 0) throw new Error("Not Found");
+    return this.findById(invitationId);
   }
 
   public async revokePermission(permissionId: string) {
