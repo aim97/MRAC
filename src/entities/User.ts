@@ -38,4 +38,12 @@ export class User {
   constructor(input: Partial<User>) {
     Object.assign(this, input);
   }
+
+  // to ensure that the password is not unintentionally leaked
+  toJSON() {
+    return {
+      username: this.username,
+      email: this.email,
+    };
+  }
 }

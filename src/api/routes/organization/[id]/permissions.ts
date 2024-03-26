@@ -40,7 +40,6 @@ permissionsRouter.post("/", async (req, res) => {
       organizationId: organizationAccess!.organization.id,
       role,
     });
-
     res.status(httpStatus.CREATED).json(invitation);
   }
   res.status(httpStatus.BAD_REQUEST).end("Invalid User");
@@ -52,9 +51,7 @@ permissionsRouter.post("/:permissionId/revoke", async (req, res) => {
   const {
     context: { repos },
   } = req;
-
   const permission = await repos.permission.revokePermission(permissionId);
-
   res.status(httpStatus.OK).json(permission);
 });
 
