@@ -2,6 +2,11 @@ import { Router } from "express";
 import httpStatus from "http-status";
 import { organizationRouter as organizationInstanceRouter } from "./[id]";
 import { getOrganizationAccessPermission } from "../../middlewares/getOrganizationAccessPermission";
+import { schemaValidator } from "../../../common/schemaValidator";
+import {
+  AcceptInviteRequestSchema,
+  OrganizationAccessRequestSchema,
+} from "./validation";
 
 const organizationRouter = Router();
 
@@ -43,18 +48,23 @@ organizationRouter.get("/invites", async (req, res) => {
   res.status(httpStatus.OK).json(invitations);
 });
 
-organizationRouter.post("/invites/:invitationId/accept", async (req, res) => {
-  const { user, repos } = req.context;
-  const invitationId = req.params.invitationId;
-  const permission = await repos.permission.acceptInvitation(
-    user!.id,
-    invitationId,
-  );
-  res.status(httpStatus.OK).json(permission);
-});
+organizationRouter.post(
+  "/invites/:invitationId/accept",
+  schemaValidator(AcceptInviteRequestSchema),
+  async (req, res) => {
+    const { user, repos } = req.context;
+    const invitationId = req.params.invitationId;
+    const permission = await repos.permission.acceptInvitation(
+      user!.id,
+      invitationId,
+    );
+    res.status(httpStatus.OK).json(permission);
+  },
+);
 
 organizationRouter.use(
   "/:organizationId",
+  schemaValidator(OrganizationAccessRequestSchema),
   getOrganizationAccessPermission,
   organizationInstanceRouter,
 );
